@@ -5,7 +5,7 @@ image:
 - Ubuntu
 
 configuration: Release
-platform: x64
+platform: Any
 
 services:
 - docker
