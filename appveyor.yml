@@ -5,8 +5,7 @@ configuration: Release
 
 skip_commits:
   files:
-  - docs/*
-  - README.md
+  - '**/*.md'
 
 assembly_info:
   patch: true
@@ -21,6 +20,9 @@ before_build:
 after_build:
 - dotnet pack
 
-build:
-  publish_nuget: true
-  verbosity: normal
+build_script:
+- cmd: dotnet build HealthRabbitMQ.sln
+
+test_script:
+- cmd: cd tests
+- cmd: dotnet test
