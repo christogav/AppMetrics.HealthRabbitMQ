@@ -1,0 +1,27 @@
+version: 1.0.{build}
+
+image:
+- Visual Studio 2017
+- Ubuntu
+
+configuration: Release
+platform: x64
+
+services:
+- docker
+
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+
+build:
+  project: HealthRabbitMQ.sln
+  publish_nuget: true
+  publish_aspnet_core: true
+  publish_core_console: true
+  verbosity: minimal
