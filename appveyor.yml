@@ -24,5 +24,4 @@ build_script:
 - cmd: dotnet build HealthRabbitMQ.sln
 
 test_script:
-- cmd: cd tests
-- cmd: dotnet test
+- cmd: dotnet test tests/App.Metrics.Health.Checks.RabbitMQ.Tests
