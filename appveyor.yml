@@ -36,6 +36,6 @@ test_script:
 deploy:
   provider: NuGet
   api_key:
-    secure: oy2l4mhfxt6gufef25qankeoqqzogg7uzhinerz5nmu7pm
+    secure: zENvH3gbuZCsYxkF3LVve2nDsR8lfcYsdEUshfED6zrmV5i87aF/sdofSiVWPmMC
   skip_symbols: false
   artifacts: /.*\.nupkg/
