@@ -25,7 +25,10 @@ before_build:
 - dotnet restore
 
 after_build:
-- dotnet pack
+- dotnet pack --output nupkgs /p:Version={version}
+
+artifacts:
+- path: nupkgs/*.nupkg
 
 build_script:
 - cmd: dotnet build HealthRabbitMQ.sln
