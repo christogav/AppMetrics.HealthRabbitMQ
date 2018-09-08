@@ -25,13 +25,13 @@ before_build:
 - dotnet restore
 
 after_build:
-- dotnet pack --output nupkgs /p:Version={version}
+- dotnet pack --include-symbols --configuration %CONFIGURATION% --no-build --output ..\..\nupkgs /p:PackageVersion=%APPVEYOR_BUILD_VERSION%
 
 artifacts:
 - path: nupkgs/*.nupkg
 
 build_script:
-- cmd: dotnet build HealthRabbitMQ.sln
+- cmd: dotnet build --configuration %CONFIGURATION%
 
 test_script:
 - cmd: dotnet test tests/App.Metrics.Health.Checks.RabbitMQ.Tests
