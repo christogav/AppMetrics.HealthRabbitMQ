@@ -32,3 +32,10 @@ build_script:
 
 test_script:
 - cmd: dotnet test tests/App.Metrics.Health.Checks.RabbitMQ.Tests
+
+deploy:
+  provider: NuGet
+  api_key:
+    secure: oy2l4mhfxt6gufef25qankeoqqzogg7uzhinerz5nmu7pm
+  skip_symbols: false
+  artifacts: /.*\.nupkg/
