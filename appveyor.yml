@@ -7,12 +7,22 @@ skip_commits:
   files:
   - '**/*.md'
 
-assembly_info:
+install:
+- ps: >-
+    choco install rabbitmq -Version 3.6.14
+
+dotnet_csproj:
   patch: true
-  file: AssemblyInfo.*
-  assembly_version: "1.0.{build}"
-  assembly_file_version: "{version}"
-  assembly_informational_version: "{version}"
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+
+cache:
+  - packages -> **\packages.config
+  - '%LocalAppData%\NuGet\Cache'
 
 before_build:
 - dotnet restore

@@ -13,12 +13,19 @@ namespace App.Metrics.Health.Checks.RabbitMQ
     internal class RabbitMQHealthCheck : HealthCheck
     {
         private const string MessageBody = "Hello, world!";
-        private static readonly ILog Logger = LogProvider.For<IRunHealthChecks>();
+        private readonly ILog _logger;
         private readonly IConnectionFactory _connectionFactory;
 
         public RabbitMQHealthCheck(string name, IConnectionFactory connectionFactory)
+            : this(name, connectionFactory, LogProvider.For<IRunHealthChecks>())
+        {
+            _connectionFactory = connectionFactory;
+        }
+
+        internal RabbitMQHealthCheck(string name, IConnectionFactory connectionFactory, ILog log)
             : base(name)
         {
+            _logger = log;
             _connectionFactory = connectionFactory;
         }
 
@@ -43,7 +50,7 @@ namespace App.Metrics.Health.Checks.RabbitMQ
             }
             catch (Exception ex)
             {
-                Logger.ErrorException($"{Name} failed.", ex);
+                _logger.ErrorException($"{Name} failed.", ex);
 
                 return new ValueTask<HealthCheckResult>(
                     HealthCheckResult.Unhealthy($"Failed. {Name} is unavailable. ({ex.Message})"));

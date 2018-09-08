@@ -1,19 +1,21 @@
 ﻿namespace App.Metrics.Health.Checks.RabbitMQ.Tests
 {
+    using System;
     using System.Threading.Tasks;
     using FluentAssertions;
     using global::RabbitMQ.Client;
     using global::RabbitMQ.Client.Exceptions;
+    using Logging;
+    using Moq;
     using Xunit;
 
-    public class RabbitMQHealthCheckTests : IClassFixture<LoggingFixture>
+    public class RabbitMQHealthCheckTests
     {
-        private readonly LoggingFixture _loggingFixture;
+        private readonly Mock<ILog> _log;
 
-        public RabbitMQHealthCheckTests(LoggingFixture loggingFixture)
+        public RabbitMQHealthCheckTests()
         {
-            _loggingFixture = loggingFixture;
-            _loggingFixture.Clean();
+            _log = new Mock<ILog>();
         }
 
         [Fact]
@@ -27,7 +29,11 @@
                 Port = 5673 // wrong
             };
 
-            var healthCheck = new RabbitMQHealthCheck("test", connectionFactory);
+            _log.Setup(_ => _.Log(LogLevel.Error, It.IsAny<Func<string>>(), It.IsAny<BrokerUnreachableException>(), It.IsAny<object[]>()))
+                .Returns(true)
+                .Verifiable();
+
+            var healthCheck = new RabbitMQHealthCheck("test", connectionFactory, _log.Object);
 
             // act
             var result = await healthCheck.ExecuteAsync().ConfigureAwait(false);
@@ -35,8 +41,7 @@
             // assert
             result.Should().NotBeNull()
                 .And.Subject.As<HealthCheck.Result>().Check.Status.Should().Be(HealthCheckStatus.Unhealthy);
-            _loggingFixture.Exception.Should().NotBeNull()
-                .And.BeOfType<BrokerUnreachableException>();
+            _log.Verify();
         }
 
         [Fact]
@@ -49,7 +54,10 @@
                 HostName = "localhost"
             };
 
-            var healthCheck = new RabbitMQHealthCheck("test", connectionFactory);
+            _log.Setup(_ => _.Log(LogLevel.Error, It.IsAny<Func<string>>(), It.IsAny<Exception>(), It.IsAny<object[]>()))
+                .Returns(true);
+
+            var healthCheck = new RabbitMQHealthCheck("test", connectionFactory, _log.Object);
 
             // act
             var result = await healthCheck.ExecuteAsync().ConfigureAwait(false);
