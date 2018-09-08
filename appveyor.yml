@@ -21,8 +21,7 @@ cache:
   - '%LocalAppData%\NuGet\Cache'
 
 before_build:
-- docker-switch-linux
-- docker run -d --rm -p 5672:5672 rabbitmq
+- choco install rabbitmq --ignoredependencies -y
 - dotnet restore
 
 after_build:
